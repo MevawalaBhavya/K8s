@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  generation: 5
+  name: cloud-major-assignment-deployment
+spec:
+  selector:
+    matchLabels:
+      app: cloud-assignment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cloud-assignment
+    spec:
+      containers:
+        - name: container1
+          imagePullPolicy: Always
+          image: "us-central1-docker.pkg.dev/csci5408-k8s/docker-container-1/docker-container-1"
+          ports:
+            - containerPort: 6000
+          volumeMounts:
+            - name: cloud-major-assignment-storage
+              mountPath: /BHAVYA_PV_dir/data/
+        - name: container2
+          imagePullPolicy: Always
+          image: "us-central1-docker.pkg.dev/csci5408-k8s/docker-container2/docker-container2"
+          ports:
+            - containerPort: 6005
+          volumeMounts:
+            - name: cloud-major-assignment-storage
+              mountPath: /BHAVYA_PV_dir/data/
+      volumes:
+        - name: cloud-major-assignment-storage
+          persistentVolumeClaim:
+            claimName: cloud-major-assignment-pvc
