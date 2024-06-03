@@ -1,0 +1,12 @@
+steps: 
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/csci5408-k8s/docker-container-1/docker-container1:$SHORT_SHA','-t', 'us-central1-docker.pkg.dev/csci5408-k8s/docker-container-1/docker-container1:latest', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/csci5408-k8s/docker-container-1/docker-container1:$SHORT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/csci5408-k8s/docker-container-1/docker-container1:latest']
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['set', 'image', 'deployment/cloud-major-assignment-deployment', 'container1=us-central1-docker.pkg.dev/csci5408-k8s/docker-container-1/docker-container1:$SHORT_SHA']
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=cloud-major-assignment'
